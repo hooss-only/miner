@@ -3,20 +3,31 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define RESET_COLOR "\033[0m"
+#define COORDINATE_COLOR "\033[33m"
+#define NUMBER_COLOR "\033[37m"
+#define BOMB_COLOR "\033[31m"
+#define BLOCK_COLOR "\033[36m"
+
 void print_board(int width, int height, char playing_board[width][height]) {
 	fputs("  ", stdout);
 	for (int i=0; i<width; i++) {
-		printf("%d ", i);
+		printf("%s%d %s", COORDINATE_COLOR, i, RESET_COLOR);
 	}
+
 	fputs("\n", stdout);
 	for (int i=0; i<height; i++) {
-		printf("%d ", i);
+		printf("%s%d %s", COORDINATE_COLOR, i, RESET_COLOR);
 		for (int j=0; j<width; j++) {
 			if (playing_board[i][j] != '#' && playing_board[i][j] != '*') {
-				printf("%d ", playing_board[i][j]);
+				printf("%s%d ", NUMBER_COLOR, playing_board[i][j]);
 				continue;
 			}
-			printf("%c ", playing_board[i][j]);
+			char *color = BLOCK_COLOR;
+			if (playing_board[i][j] == '*') color = BOMB_COLOR;
+
+			printf("%s%c ", color, playing_board[i][j]);
+			printf("%s", RESET_COLOR);
 		}
 		fputs("\n", stdout);
 	}
@@ -47,8 +58,8 @@ void check_win(int width, int height, char playing_board[width][height], unsigne
 			if (playing_board[i][j] == '#') not_open++;
 
 	if (not_open == mine_amount) {
-		fputs("YOU WIN!!!\n", stdout);
 		print_board(width, height, playing_board);
+		fputs("YOU WIN!!!\n", stdout);
 		exit(0);
 	}
 }
