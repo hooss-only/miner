@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "loop.h"
 
-#define WIDTH 10
-#define HEIGHT 10
-#define MINE_AMOUNT 10
+
+unsigned int WIDTH = 10, HEIGHT = 10, MINE_AMOUNT = 10;
 
 void init_mine_map(bool mine_map[WIDTH][HEIGHT]) {
 	unsigned int x, y, mine_amount = 0;
@@ -50,15 +50,30 @@ void make_board(unsigned int game_board[WIDTH][HEIGHT], bool mine_map[WIDTH][HEI
 }
 
 int main() {
+	unsigned int size;
+	while (true) {
+		printf("size mine_amount: ");
+		scanf("%d %d", &size, &MINE_AMOUNT);
+		if (MINE_AMOUNT > (size*size)/2) {
+			printf("mine_amount <= (size^2)/2\n");
+			continue;
+		}
+		break;
+	}
+	WIDTH = size;
+	HEIGHT = size;
 	srand(time(NULL));
 
-	bool mine_map[WIDTH][HEIGHT] = { 0 };
+	bool mine_map[WIDTH][HEIGHT];
+	memset(mine_map, 0, sizeof(mine_map));
 	init_mine_map(mine_map);
 
-	unsigned int game_board[WIDTH][HEIGHT] = { 0 };
+	unsigned int game_board[WIDTH][HEIGHT];
+	memset(game_board, 0, sizeof(game_board));
 	make_board(game_board, mine_map);
 
 	char playing_board[WIDTH][HEIGHT];
+	memset(playing_board, 35, sizeof(playing_board));
 	for (int i=0; i<WIDTH; i++) {
 		for (int j=0; j<HEIGHT; j++) {
 			playing_board[i][j] = 35;
