@@ -3,9 +3,11 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include "loop.h"
+
 #define WIDTH 10
 #define HEIGHT 10
-#define MINE_AMOUNT 30
+#define MINE_AMOUNT 10
 
 void init_mine_map(bool mine_map[WIDTH][HEIGHT]) {
 	unsigned int x, y, mine_amount = 0;
@@ -50,17 +52,21 @@ void make_board(unsigned int game_board[WIDTH][HEIGHT], bool mine_map[WIDTH][HEI
 int main() {
 	srand(time(NULL));
 
-	bool mine_map[WIDTH][HEIGHT] = {0};
+	bool mine_map[WIDTH][HEIGHT] = { 0 };
 	init_mine_map(mine_map);
 
-	unsigned int game_board[WIDTH][HEIGHT] = {0};
+	unsigned int game_board[WIDTH][HEIGHT] = { 0 };
 	make_board(game_board, mine_map);
 
+	char playing_board[WIDTH][HEIGHT];
 	for (int i=0; i<WIDTH; i++) {
 		for (int j=0; j<HEIGHT; j++) {
-			printf("%2d ", game_board[i][j]);
+			playing_board[i][j] = 35;
 		}
-		fputs("\n", stdout);
+	}
+	while (true) {
+		loop(WIDTH, HEIGHT, game_board, playing_board);
+		check_win(WIDTH, HEIGHT, playing_board, MINE_AMOUNT);
 	}
 	return 0;
 }
